@@ -18,7 +18,7 @@
                                 <img
                                     t-att-src="image_data_uri(company_logo)"
                                     height="150"
-                                    width="100%"
+                                    width="50%"
                                 />
                             </div>
                             <br />
@@ -236,6 +236,7 @@
     <template id="electronic_report_common_total_info">
         <table class="table table-sm table-bordered-black small">
             <t t-set="tax_totals" t-value="o.tax_totals" />
+            <t t-set="currency" t-value="o.company_currency_id"/>
             <t t-call="account.document_tax_totals" />
         </table>
     </template>
