@@ -14,6 +14,7 @@
                     readonly="state != 'draft'"
                 />
                 <field name="l10n_latam_internal_type" invisible="1" />
+                <field name="l10n_latam_document_number" />
             </xpath>
             <xpath expr="//field[@name='payment_reference']" position="after">
                 <!-- Forma de Pago SRI -->

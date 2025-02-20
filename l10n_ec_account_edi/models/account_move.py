@@ -449,3 +449,16 @@ class AccountMove(models.Model):
                 )
 
         return super().button_cancel_posted_moves()
+
+    @api.depends("name", "l10n_ec_electronic_authorization")
+    def _compute_l10n_latam_document_number(self):
+        for rec in self:
+            if rec.move_type in ("in_refund", "in_invoice"):
+                if rec.l10n_ec_electronic_authorization:
+                    rec.l10n_latam_document_number = (
+                        rec.l10n_ec_electronic_authorization[24:39]
+                    )
+                else:
+                    rec.l10n_latam_document_number = "/"
+            else:
+                super()._compute_l10n_latam_document_number()
