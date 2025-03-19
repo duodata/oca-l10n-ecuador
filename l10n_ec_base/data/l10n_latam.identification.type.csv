@@ -1,0 +1,4 @@
+id,code_ats_compra,code_ats_venta
+l10n_ec.ec_dni,01,05
+l10n_ec.ec_ruc,02,04
+l10n_ec.ec_passport,03,06

@@ -9,6 +9,8 @@
     "version": "18.0.1.1",
     "depends": ["l10n_ec", "account"],
     "data": [
+        "data/l10n_latam.identification.type.csv",
+        "data/res.country.csv",
         "wizard/account_payment_register_views.xml",
         "views/account_tax_view.xml",
         "views/account_journal_view.xml",
