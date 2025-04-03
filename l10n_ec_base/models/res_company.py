@@ -11,6 +11,7 @@ class ResCompany(models.Model):
     l10n_ec_regimen = fields.Selection(
         string="Regimen",
         selection=[
+            ("general", "CONTRIBUYENTE RÉGIMEN GENERAL"),
             ("rimpe", "CONTRIBUYENTE RÉGIMEN RIMPE"),
             ("rimpe_popular", "CONTRIBUYENTE NEGOCIO POPULAR - RÉGIMEN RIMPE"),
         ],
