@@ -46,6 +46,7 @@ class AccountEdiDocument(models.Model):
         compute="_compute_l10n_ec_document_data",
         store=True,
     )
+    datas = fields.Binary(related="attachment_id.datas")
 
     @api.depends("move_id")
     def _compute_l10n_ec_document_data(self):

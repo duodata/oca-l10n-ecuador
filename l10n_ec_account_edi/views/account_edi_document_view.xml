@@ -67,6 +67,7 @@
                         <field name="l10n_ec_last_sent_date" />
                         <field name="create_date" />
                         <field name="create_uid" />
+                        <field name="datas" string="XML" />
                         <field name="error" string="Last Error Message" />
                     </group>
                 </sheet>
