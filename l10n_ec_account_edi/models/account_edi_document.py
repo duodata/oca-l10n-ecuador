@@ -227,7 +227,6 @@ class AccountEdiDocument(models.Model):
             "dirMatriz": emission_address,
             "regimenMicroempresas": "",
             "agenteRetencion": company.l10n_ec_retention_agent,
-            "contribuyenteRimpe": company.l10n_ec_get_regimen(),
             "company": company,
         }
         return data
@@ -361,6 +360,8 @@ class AccountEdiDocument(models.Model):
                     "description": line.description,
                 }
             )
+        info_data.append({"name": "Catastro", "description": self.move_id.company_id.l10n_ec_get_regimen(),
+})
         return info_data
 
     def _l10n_ec_get_info_invoice(self):
