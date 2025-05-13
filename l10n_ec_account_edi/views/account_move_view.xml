@@ -21,8 +21,8 @@
                 <field
                     name="l10n_ec_sri_payment_id"
                     options="{'no_create': True, 'no_open': True}"
-                    invisible="country_code != 'EC' or not l10n_latam_use_documents"
-                    required="country_code == 'EC' and l10n_latam_use_documents"
+                    invisible="country_code != 'EC' or move_type not in ('in_invoice', 'out_invoice')"
+                    required="country_code == 'EC'"
                     readonly="state != 'draft'"
                 />
             </xpath>
