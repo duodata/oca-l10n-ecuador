@@ -230,6 +230,7 @@ class AccountEdiFormat(models.Model):
                 document.write({"l10n_ec_is_edi_doc": True})
             errors = []
             is_auth = False
+            attachment = False
             try:
                 for edi_doc in edi_docs:
                     attachment = edi_doc.attachment_id
