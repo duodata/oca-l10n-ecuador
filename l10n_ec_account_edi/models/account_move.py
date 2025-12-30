@@ -364,7 +364,7 @@ class AccountMove(models.Model):
 
     def _is_manual_document_number(self):
         is_purchase = super()._is_manual_document_number()
-        if is_purchase and self._is_l10n_ec_is_purchase_liquidation():
+        if self._is_l10n_ec_is_purchase_liquidation():
             return False
         return is_purchase
 
@@ -453,11 +453,18 @@ class AccountMove(models.Model):
     @api.depends("name", "l10n_ec_electronic_authorization")
     def _compute_l10n_latam_document_number(self):
         for rec in self:
-            if rec.move_type in ("in_refund", "in_invoice"):
+            is_purchase_liquidation = (
+                rec.env.context.get("internal_type") == "purchase_liquidation"
+            )
+            if rec.move_type in ("in_refund", "in_invoice") and not is_purchase_liquidation:
                 if rec.l10n_ec_electronic_authorization:
-                    rec.l10n_latam_document_number = (
-                        rec.l10n_ec_electronic_authorization[24:39]
-                    )
+                    raw_number = rec.l10n_ec_electronic_authorization[24:39]
+                    if len(raw_number) == 15 and raw_number.isdigit():
+                        rec.l10n_latam_document_number = (
+                            f"{raw_number[:3]}-{raw_number[3:6]}-{raw_number[6:]}"
+                        )
+                    else:
+                        rec.l10n_latam_document_number = raw_number
                 else:
                     rec.l10n_latam_document_number = "/"
             else:

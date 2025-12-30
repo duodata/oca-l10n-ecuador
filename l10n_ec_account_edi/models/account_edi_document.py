@@ -129,7 +129,46 @@ class AccountEdiDocument(models.Model):
         :param document_number: str with format 001-001-0123456789
         :return tuple(entity_number, printer_point, sequence)
         """
-        entity_number, printer_point, sequence_number = document_number.split("-")
+        document_number = (document_number or "").strip()
+        if not document_number:
+            if raise_error:
+                raise UserError(_("El número de documento no puede estar vacío."))
+            return ("000", "000", "000000000")
+
+        if " " in document_number:
+            document_number = document_number.split()[-1]
+
+        parts = document_number.split("-")
+        if len(parts) == 3:
+            entity_number, printer_point, sequence_number = parts
+        elif len(parts) == 1 and document_number.isdigit():
+            if len(document_number) == 15:
+                entity_number = document_number[:3]
+                printer_point = document_number[3:6]
+                sequence_number = document_number[6:]
+            else:
+                document = self.l10n_ec_get_current_document()
+                journal = document.journal_id
+                if not journal.l10n_ec_entity or not journal.l10n_ec_emission:
+                    if raise_error:
+                        raise UserError(
+                            _(
+                                "No se pudo determinar establecimiento y punto de emisión del diario."
+                            )
+                        )
+                    return ("000", "000", "000000000")
+                entity_number = journal.l10n_ec_entity
+                printer_point = journal.l10n_ec_emission
+                sequence_number = document_number
+        else:
+            if raise_error:
+                raise UserError(
+                    _(
+                        "Formato de número de documento inválido: %s",
+                        document_number,
+                    )
+                )
+            return ("000", "000", "000000000")
         return (
             entity_number.rjust(3, "0"),
             printer_point.rjust(3, "0"),
