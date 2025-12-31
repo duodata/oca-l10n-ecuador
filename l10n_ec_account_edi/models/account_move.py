@@ -453,9 +453,7 @@ class AccountMove(models.Model):
     @api.depends("name", "l10n_ec_electronic_authorization")
     def _compute_l10n_latam_document_number(self):
         for rec in self:
-            is_purchase_liquidation = (
-                rec.env.context.get("internal_type") == "purchase_liquidation"
-            )
+            is_purchase_liquidation = rec._is_l10n_ec_is_purchase_liquidation()
             if rec.move_type in ("in_refund", "in_invoice") and not is_purchase_liquidation:
                 if rec.l10n_ec_electronic_authorization:
                     raw_number = rec.l10n_ec_electronic_authorization[24:39]
