@@ -48,7 +48,6 @@
             <xpath expr="//group[@id='header_right_group']" position="inside">
                 <field
                     name='l10n_ec_tax_support'
-                    readonly="state != 'draft'"
                     invisible="move_type != 'in_invoice'"
                 />
             </xpath>
