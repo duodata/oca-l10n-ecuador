@@ -9,6 +9,16 @@ from .data import TAX_SUPPORT
 
 _logger = logging.getLogger(__name__)
 
+L10N_EC_VAT_TYPES = (
+    "vat05",
+    "vat08",
+    "vat12",
+    "vat13",
+    "vat14",
+    "vat15",
+    "zero_vat",
+)
+
 
 class AccountMove(models.Model):
     _inherit = "account.move"
@@ -430,19 +440,21 @@ class AccountMoveLine(models.Model):
                     currency_rate * abs(line.price_total - line.price_subtotal)
                 )
 
-    @api.onchange("name", "product_id")
+    @api.onchange("name", "product_id", "tax_ids")
     def _onchange_get_l10n_ec_tax_support(self):
         for line in self:
             line.l10n_ec_tax_support = line._get_l10n_ec_tax_support()
 
     def _get_l10n_ec_tax_support(self):
         self.ensure_one()
-        if (
-            not self.l10n_ec_tax_support
-            and self.move_id
-            and self.move_id.l10n_ec_tax_support
-        ):
-            return self.move_id.l10n_ec_tax_support
+        if not self.l10n_ec_tax_support:
+            vat_taxes = self.tax_ids.filtered(
+                lambda tax: tax.tax_group_id.l10n_ec_type in L10N_EC_VAT_TYPES
+            )
+            if vat_taxes:
+                return "01" if any(vat_taxes.mapped("amount")) else "02"
+            if self.move_id and self.move_id.l10n_ec_tax_support:
+                return self.move_id.l10n_ec_tax_support
         return self.l10n_ec_tax_support
 
     def _compute_tax_key(self):
